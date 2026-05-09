@@ -1,0 +1,10 @@
+{
+  "name": "atlas-collector",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "fastify": "^4.24.3",
+    "ioredis": "^5.3.2",
+    "dotenv": "^16.3.1"
+  }
+}

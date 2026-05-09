@@ -1,0 +1,43 @@
+services:
+  neo4j:
+    image: neo4j:community
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/sentinel_atlas_pass
+    volumes:
+      - neo4j_data:/data
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6380:6379" # Port 6379 might be taken by Sentinel-X, using 6380 for host
+
+  collector:
+    build: ./services/collector
+    ports:
+      - "5002:5002"
+    env_file: .env
+    depends_on:
+      - redis
+
+  engine:
+    build: ./services/engine
+    ports:
+      - "3100:3002"
+    env_file: .env
+    depends_on:
+      - neo4j
+      - redis
+
+  frontend:
+    build: ./services/frontend
+    ports:
+      - "3003:3000"
+    env_file: .env
+    depends_on:
+      - engine
+
+volumes:
+  neo4j_data:
